@@ -64,11 +64,28 @@ exports.exploreCategoryById = async (req, res) => {
       limitNumber
     );
     res.render("categories", {
-      title: "Cooking Blog - Categoreis",
+      title: "Cooking Blog - Categories",
       categoryById,
     });
   } catch (error) {
     res.satus(500).send({ message: error.message || "Error Occured" });
+  }
+};
+
+// Post '/search' --- Search
+
+exports.search = async (req, res) => {
+  try {
+    const { searchTerm } = req.body;
+    const recipe = await Recipe.find({
+      $text: { $search: searchTerm, $diacriticSensitive: true },
+    });
+    res.render("search", {
+      title: "Cooking Blog - Search",
+      recipe,
+    });
+  } catch (error) {
+    res.status(500).send({ message: error.message || "Error Occured" });
   }
 };
 
