@@ -89,6 +89,34 @@ exports.search = async (req, res) => {
   }
 };
 
+// GET '/explore-latest' --- Explore Latest
+
+exports.exploreLatest = async (req, res) => {
+  try {
+    const limit = 20;
+    const recipes = await Recipe.find({}).sort({ _id: -1 }).limit(limit);
+    res.render("explore-latest", {
+      title: "Cooking Blog - Explore Random",
+      recipes,
+    });
+  } catch (error) {
+    res.status(500).send({ message: error.message || "Error Occured" });
+  }
+};
+
+// GET '/show-random' --- Show Random
+
+exports.showRandom = async (req, res) => {
+  try {
+    const count = await Recipe.find({}).countDocuments();
+    const random = Math.floor(Math.random() * count);
+    const recipe = await Recipe.findOne().skip(random).exec();
+    res.render("show-random", { title: "Cooking Blog - Show Random", recipe });
+  } catch (error) {
+    res.status(500).send({ message: error.message || "Error Occured" });
+  }
+};
+
 // insert dummy data to database
 
 // insertDummyCategory();
